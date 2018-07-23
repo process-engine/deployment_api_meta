@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "deployment_api_contracts": "git@github.com:process-engine/deployment_api_contracts.git",
+    "deployment_api_core": "git@github.com:process-engine/deployment_api_core.git",
+    "deployment_api_http": "git@github.com:process-engine/deployment_api_http.git",
+  }
+}

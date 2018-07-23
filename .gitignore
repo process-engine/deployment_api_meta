@@ -1,0 +1,21 @@
+
+dist
+node_modules
+package-lock.json
+
+deployment_api_contracts
+deployment_api_http
+deployment_api_core
+
+# OSX-finder info-files
+*.DS_Store
+
+# IDE configs
+.vscode/*
+!.vscode/launch.json
+.idea/
+*.iml
+*.iws
+.classpath
+.project
+.settings/
