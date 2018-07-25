@@ -1,0 +1,55 @@
+{
+  "name": "@process-engine/deployment_api_meta_integration_tests",
+  "publishConfig": {
+    "registry": "https://www.npmjs.com"
+  },
+  "version": "1.0.0",
+  "description": "integration tests",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "tests"
+  ],
+  "scripts": {
+    "start": "cross-env NODE_ENV=test CONFIG_PATH=config node index.js",
+    "test": "cross-env NODE_ENV=test CONFIG_PATH=config mocha -t 15000 test/**/*.js --exit",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "@essential-projects/bootstrapper": "^3.0.0",
+    "@essential-projects/bootstrapper_node": "^3.0.0",
+    "@essential-projects/event_aggregator": "^3.0.0",
+    "@essential-projects/http_extension": "^4.0.0",
+    "@essential-projects/services": "^2.0.2",
+    "@process-engine/consumer_api_core": "^0.17.0",
+    "@process-engine/deployment_api_contracts": "feature~implement_update_process_model_function",
+    "@process-engine/deployment_api_core": "feature~implement_update_process_model_function",
+    "@process-engine/deployment_api_http": "feature~implement_update_process_model_function",
+    "@process-engine/flow_node_instance.repository.sequelize": "^2.0.0",
+    "@process-engine/iam": "^1.0.0",
+    "@process-engine/process_engine_contracts": "feature~implement_update_process_model_function",
+    "@process-engine/process_engine": "feature~implement_update_process_model_function",
+    "@process-engine/process_model.repository.sequelize": "^2.0.0",
+    "@process-engine/timers.repository.sequelize": "^1.0.0",
+    "addict-ioc": "^2.3.7",
+    "gulptraum-typescript": "^1.5.0",
+    "loggerhythm": "^3.0.3",
+    "mocha": "^5.1.1",
+    "mocha-jenkins-reporter": "^0.3.12",
+    "moment": "^2.22.2",
+    "should": "^13.2.1",
+    "supertest": "^3.0.0",
+    "tsconfig": "^7.0.0",
+    "typescript": "^2.8.3",
+    "uuid": "3.2.1"
+  },
+  "devDependencies": {
+    "cross-env": "^5.1.4",
+    "eslint": "^4.19.1",
+    "eslint-config-5minds": "^0.2.0",
+    "eslint-plugin-import": "^2.11.0",
+    "gulp": "^3.9.1",
+    "gulptraum": "^2.3.0",
+    "@essential-projects/tslint-config": "^1.0.0"
+  }
+}
