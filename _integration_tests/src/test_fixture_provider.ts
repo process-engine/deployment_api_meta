@@ -6,6 +6,9 @@ import {Logger} from 'loggerhythm';
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 
 import {DeploymentContext, IDeploymentApiService} from '@process-engine/deployment_api_contracts';
+import {ExecutionContext, IExecutionContextFacade, IExecutionContextFacadeFactory} from '@process-engine/process_engine_contracts';
+
+import {IIdentity} from '@essential-projects/iam_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -37,9 +40,14 @@ export class TestFixtureProvider {
   private container: InvocationContainer;
 
   private _deploymentContext: DeploymentContext = undefined;
+  private _executionContextFacade: IExecutionContextFacade;
 
   public get context(): DeploymentContext {
     return this._deploymentContext;
+  }
+
+  public get executionContextFacade(): IExecutionContextFacade {
+    return this._executionContextFacade;
   }
 
   public get deploymentApiClientService(): IDeploymentApiService {
@@ -49,7 +57,7 @@ export class TestFixtureProvider {
   public async initializeAndStart(): Promise<void> {
     await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
-    await this._createDeploymentContextForUsers();
+    await this._createContexts();
     this._deploymentApiClientService = await this.resolveAsync<IDeploymentApiService>('DeploymentApiClientService');
   }
 
@@ -87,10 +95,24 @@ export class TestFixtureProvider {
     }
   }
 
-  private async _createDeploymentContextForUsers(): Promise<void> {
+  private async _createContexts(): Promise<void> {
+
+    // Note: Since the iam service is mocked, it doesn't matter what kind of token is used here.
+    // It only matters that one is present.
+    const identity: IIdentity = {
+      token: 'randomtoken',
+    };
+
     this._deploymentContext = <DeploymentContext> {
       identity: 'deploymentApiIntegrationtestUser',
     };
+
+    const executionContext: ExecutionContext = new ExecutionContext(identity);
+
+    const executionContextFacadeFactory: IExecutionContextFacadeFactory =
+      await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
+
+    this._executionContextFacade = executionContextFacadeFactory.create(executionContext);
   }
 
   /**

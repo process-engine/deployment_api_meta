@@ -24,10 +24,10 @@
         </camunda:properties>
       </bpmn:extensionElements>
     </bpmn:sequenceFlow>
-    <bpmn:scriptTask id="scriptTask_CreateSampleResult" name="Create Sample Result">
+    <bpmn:scriptTask id="scriptTask_CreateSampleResult" name="Sample output">
       <bpmn:incoming>SequenceFlow_0vspoh6</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0dqpbny</bpmn:outgoing>
-      <bpmn:script>return { scriptOutput: "hello world" }</bpmn:script>
+      <bpmn:script>return 'hello'</bpmn:script>
     </bpmn:scriptTask>
     <bpmn:endEvent id="EndEvent_Success" name="Finish">
       <bpmn:incoming>SequenceFlow_0dqpbny</bpmn:incoming>
