@@ -39,15 +39,15 @@ export class TestFixtureProvider {
 
   private container: InvocationContainer;
 
-  private _deploymentContext: DeploymentContext = undefined;
-  private _executionContextFacade: IExecutionContextFacade;
+  private _deploymentContextDefault: DeploymentContext = undefined;
+  private _deploymentContextForbidden: DeploymentContext = undefined;
 
   public get context(): DeploymentContext {
-    return this._deploymentContext;
+    return this._deploymentContextDefault;
   }
 
-  public get executionContextFacade(): IExecutionContextFacade {
-    return this._executionContextFacade;
+  public get contextForbidden(): DeploymentContext {
+    return this._deploymentContextForbidden;
   }
 
   public get deploymentApiClientService(): IDeploymentApiService {
@@ -99,12 +99,19 @@ export class TestFixtureProvider {
 
     // Note: Since the iam service is mocked, it doesn't matter what kind of token is used here.
     // It only matters that one is present.
-    const identity: IIdentity = {
-      token: 'randomtoken',
+    this._deploymentContextDefault = <DeploymentContext> {
+      identity: 'deploymentApiIntegrationtestUser',
     };
 
-    this._deploymentContext = <DeploymentContext> {
-      identity: 'deploymentApiIntegrationtestUser',
+    this._deploymentContextForbidden = <DeploymentContext> {
+      identity: 'forbiddenUser',
+    };
+  }
+
+  public async createExecutionContextFacadeForContext(context: DeploymentContext): Promise<IExecutionContextFacade> {
+
+    const identity: IIdentity = {
+      token: context.identity,
     };
 
     const executionContext: ExecutionContext = new ExecutionContext(identity);
@@ -112,7 +119,7 @@ export class TestFixtureProvider {
     const executionContextFacadeFactory: IExecutionContextFacadeFactory =
       await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
 
-    this._executionContextFacade = executionContextFacadeFactory.create(executionContext);
+    return executionContextFacadeFactory.create(executionContext);
   }
 
   /**
