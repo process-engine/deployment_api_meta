@@ -29,7 +29,7 @@
     "@process-engine/iam": "^1.0.0",
     "@process-engine/process_engine_contracts": "feature~implement_update_process_model_function",
     "@process-engine/process_engine": "feature~implement_update_process_model_function",
-    "@process-engine/process_model.repository.sequelize": "^2.0.0",
+    "@process-engine/process_model.repository.sequelize": "feature~implement_update_process_model_function",
     "@process-engine/timers.repository.sequelize": "^1.0.0",
     "addict-ioc": "^2.3.7",
     "gulptraum-typescript": "^1.5.0",
