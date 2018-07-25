@@ -35,7 +35,7 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 
 export class TestFixtureProvider {
   private httpBootstrapper: AppBootstrapper;
-  private _deploymentApiClientService: IDeploymentApiService;
+  private _deploymentApiService: IDeploymentApiService;
 
   private container: InvocationContainer;
 
@@ -50,15 +50,15 @@ export class TestFixtureProvider {
     return this._deploymentContextForbidden;
   }
 
-  public get deploymentApiClientService(): IDeploymentApiService {
-    return this._deploymentApiClientService;
+  public get deploymentApiService(): IDeploymentApiService {
+    return this._deploymentApiService;
   }
 
   public async initializeAndStart(): Promise<void> {
     await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
     await this._createContexts();
-    this._deploymentApiClientService = await this.resolveAsync<IDeploymentApiService>('DeploymentApiClientService');
+    this._deploymentApiService = await this.resolveAsync<IDeploymentApiService>('DeploymentApiService');
   }
 
   public async tearDown(): Promise<void> {
