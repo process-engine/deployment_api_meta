@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as path from 'path';
 
 import {InvocationContainer} from 'addict-ioc';
@@ -120,6 +121,16 @@ export class TestFixtureProvider {
       await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
 
     return executionContextFacadeFactory.create(executionContext);
+  }
+
+  public readProcessModelFromFile(fileName: string): string {
+
+    const bpmnFolderLocation: string = this.getBpmnDirectoryPath();
+    const processModelPath: string = path.join(bpmnFolderLocation, `${fileName}.bpmn`);
+
+    const processModelAsXml: string = fs.readFileSync(processModelPath, 'utf-8');
+
+    return processModelAsXml;
   }
 
   /**
