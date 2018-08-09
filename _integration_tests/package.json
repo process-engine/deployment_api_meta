@@ -24,7 +24,7 @@
     "@process-engine/consumer_api_core": "^0.19.0",
     "@process-engine/deployment_api_contracts": "feature~process_definitions_instead_of_process_model",
     "@process-engine/deployment_api_core": "feature~process_definitions_instead_of_process_model",
-    "@process-engine/deployment_api_http": "^0.1.0",
+    "@process-engine/deployment_api_http": "feature~process_definitions_instead_of_process_model",
     "@process-engine/flow_node_instance.repository.sequelize": "^2.2.0",
     "@process-engine/iam": "^1.2.0",
     "@process-engine/process_engine_contracts": "^19.0.0",
