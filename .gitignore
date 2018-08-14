@@ -2,6 +2,7 @@
 dist
 node_modules
 package-lock.json
+processengine.sqlite
 
 deployment_api_contracts
 deployment_api_http
