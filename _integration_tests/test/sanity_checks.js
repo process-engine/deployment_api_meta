@@ -36,7 +36,7 @@ describe('Deployment API -> Sanity Checks', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should always return the most up to date version of any process definition', async () => {
+  it('should always return the current version of any process definition', async () => {
 
     const existingProcessModel = await processModelService.getProcessModelById(executionContextFacade, processModelId);
 
@@ -55,7 +55,7 @@ describe('Deployment API -> Sanity Checks', () => {
     should(startEvent.id).be.equal(expectedStartEventId, `Received an unexpected StartEventId: ${startEvent.id}`);
   });
 
-  it('should not contain outdated versions of any process definitions, when querying all process definitions', async () => {
+  it('should return only current versions of process definitions, when querying all process definitions', async () => {
 
     const processModels = await processModelService.getProcessModels(executionContextFacade);
 
