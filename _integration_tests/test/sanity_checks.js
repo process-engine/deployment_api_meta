@@ -4,7 +4,7 @@ const should = require('should');
 
 const TestFixtureProvider = require('../dist/commonjs/test_fixture_provider').TestFixtureProvider;
 
-describe('Deployment API -> importBpmnFromXml', () => {
+describe('Deployment API -> Sanity Checks', () => {
 
   let testFixtureProvider;
 
