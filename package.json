@@ -4,7 +4,7 @@
   "description": "Contains the developer setup for the deployment api.",
   "main": "index.js",
   "scripts": {
-    "build": "meta exec \"npm run build\" --exclude deployment_api_meta",
+    "build": "meta exec \"npm run build\" --exclude deployment_api_meta && cd _integration_tests && npm run build && cd ..",
     "postinstall": "minstall --trust-local-modules ."
   },
   "author": "",
