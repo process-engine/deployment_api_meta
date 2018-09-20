@@ -7,7 +7,7 @@ import {Logger} from 'loggerhythm';
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
-import {IDeploymentApiService} from '@process-engine/deployment_api_contracts';
+import {IDeploymentApi} from '@process-engine/deployment_api_contracts';
 import {ExecutionContext, IExecutionContextFacade, IExecutionContextFacadeFactory} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
@@ -39,7 +39,7 @@ const iocModules: Array<any> = iocModuleNames.map((moduleName: string): any => {
 
 export class TestFixtureProvider {
   private httpBootstrapper: AppBootstrapper;
-  private _deploymentApiService: IDeploymentApiService;
+  private _deploymentApiService: IDeploymentApi;
 
   private container: InvocationContainer;
 
@@ -54,7 +54,7 @@ export class TestFixtureProvider {
     return this._identityForbidden;
   }
 
-  public get deploymentApiService(): IDeploymentApiService {
+  public get deploymentApiService(): IDeploymentApi {
     return this._deploymentApiService;
   }
 
@@ -62,7 +62,7 @@ export class TestFixtureProvider {
     await this._initializeBootstrapper();
     await this.httpBootstrapper.start();
     await this._createContexts();
-    this._deploymentApiService = await this.resolveAsync<IDeploymentApiService>('DeploymentApiService');
+    this._deploymentApiService = await this.resolveAsync<IDeploymentApi>('DeploymentApiService');
   }
 
   public async tearDown(): Promise<void> {
