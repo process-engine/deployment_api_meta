@@ -5,11 +5,10 @@ import {InvocationContainer} from 'addict-ioc';
 import {Logger} from 'loggerhythm';
 
 import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
-
-import {DeploymentContext, IDeploymentApiService} from '@process-engine/deployment_api_contracts';
-import {ExecutionContext, IExecutionContextFacade, IExecutionContextFacadeFactory} from '@process-engine/process_engine_contracts';
-
 import {IIdentity} from '@essential-projects/iam_contracts';
+
+import {IDeploymentApiService} from '@process-engine/deployment_api_contracts';
+import {ExecutionContext, IExecutionContextFacade, IExecutionContextFacadeFactory} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -44,15 +43,15 @@ export class TestFixtureProvider {
 
   private container: InvocationContainer;
 
-  private _deploymentContextDefault: DeploymentContext = undefined;
-  private _deploymentContextForbidden: DeploymentContext = undefined;
+  private _identityDefault: IIdentity = undefined;
+  private _identityForbidden: IIdentity = undefined;
 
-  public get context(): DeploymentContext {
-    return this._deploymentContextDefault;
+  public get identity(): IIdentity {
+    return this._identityDefault;
   }
 
-  public get contextForbidden(): DeploymentContext {
-    return this._deploymentContextForbidden;
+  public get identityForbidden(): IIdentity {
+    return this._identityForbidden;
   }
 
   public get deploymentApiService(): IDeploymentApiService {
@@ -104,20 +103,16 @@ export class TestFixtureProvider {
 
     // Note: Since the iam service is mocked, it doesn't matter what kind of token is used here.
     // It only matters that one is present.
-    this._deploymentContextDefault = <DeploymentContext> {
-      identity: 'deploymentApiIntegrationtestUser',
+    this._identityDefault = <IIdentity> {
+      token: 'deploymentApiIntegrationtestUser',
     };
 
-    this._deploymentContextForbidden = <DeploymentContext> {
-      identity: 'forbiddenUser',
+    this._identityForbidden = <IIdentity> {
+      token: 'forbiddenUser',
     };
   }
 
-  public async createExecutionContextFacadeForContext(context: DeploymentContext): Promise<IExecutionContextFacade> {
-
-    const identity: IIdentity = {
-      token: context.identity,
-    };
+  public async getExecutionContextFacadeForIdentity(identity: IIdentity): Promise<IExecutionContextFacade> {
 
     const executionContext: ExecutionContext = new ExecutionContext(identity);
 

@@ -25,7 +25,7 @@ describe('Deployment API -> Sanity Checks', () => {
     processModelXml = testFixtureProvider.readProcessModelFromFile(processModelId);
     processModelUpdatedXml = testFixtureProvider.readProcessModelFromFile(processModelUpdatedId);
 
-    executionContextFacade = await testFixtureProvider.createExecutionContextFacadeForContext(testFixtureProvider.context);
+    executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(testFixtureProvider.identity);
     processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
 
     await performImport(processModelXml);
@@ -74,7 +74,7 @@ describe('Deployment API -> Sanity Checks', () => {
       overwriteExisting: true,
     };
 
-    await testFixtureProvider.deploymentApiService.importBpmnFromXml(testFixtureProvider.context, importPayload);
+    await testFixtureProvider.deploymentApiService.importBpmnFromXml(testFixtureProvider.identity, importPayload);
   }
 
 });
