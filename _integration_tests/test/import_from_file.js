@@ -35,7 +35,9 @@ describe('Deployment API -> importBpmnFromFile', () => {
     // This is to ensure that any existing process models will not falsify the results.
     const uniqueImportName = uuid.v4();
 
-    await testFixtureProvider.deploymentApiService.importBpmnFromFile(identityDefault, processModelPath, uniqueImportName, false);
+    await testFixtureProvider
+      .deploymentApiService
+      .importBpmnFromFile(identityDefault, processModelPath, uniqueImportName, false);
 
     await assertThatImportWasSuccessful();
   });
@@ -46,8 +48,13 @@ describe('Deployment API -> importBpmnFromFile', () => {
     const uniqueImportName = uuid.v4();
 
     // The value of overwriteExisting doesn't matter for the first import run.
-    await testFixtureProvider.deploymentApiService.importBpmnFromFile(identityDefault, processModelPath, uniqueImportName);
-    await testFixtureProvider.deploymentApiService.importBpmnFromFile(identityDefault, processModelPath, uniqueImportName, true);
+    await testFixtureProvider
+      .deploymentApiService
+      .importBpmnFromFile(identityDefault, processModelPath, uniqueImportName);
+
+    await testFixtureProvider
+      .deploymentApiService
+      .importBpmnFromFile(identityDefault, processModelPath, uniqueImportName, true);
 
     await assertThatImportWasSuccessful();
   });
@@ -60,8 +67,13 @@ describe('Deployment API -> importBpmnFromFile', () => {
       const uniqueImportName = uuid.v4();
 
       // The value of overwriteExisting doesn't matter for the first import run.
-      await testFixtureProvider.deploymentApiService.importBpmnFromFile(identityDefault, processModelPath, uniqueImportName);
-      await testFixtureProvider.deploymentApiService.importBpmnFromFile(identityDefault, processModelPath, uniqueImportName, false);
+      await testFixtureProvider
+        .deploymentApiService
+        .importBpmnFromFile(identityDefault, processModelPath, uniqueImportName);
+
+      await testFixtureProvider
+        .deploymentApiService
+        .importBpmnFromFile(identityDefault, processModelPath, uniqueImportName, false);
 
       should.fail(undefined, 'error', 'This request should have failed, because the process model already exists!');
     } catch (error) {
@@ -76,7 +88,9 @@ describe('Deployment API -> importBpmnFromFile', () => {
   it('should fail to import the process model, when the user is not authenticated', async () => {
 
     try {
-      await testFixtureProvider.deploymentApiService.importBpmnFromFile(undefined, processModelPath);
+      await testFixtureProvider
+        .deploymentApiService
+        .importBpmnFromFile(undefined, processModelPath);
       should.fail({}, 'error', 'This request should have failed, due to missing user authentication!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -89,7 +103,9 @@ describe('Deployment API -> importBpmnFromFile', () => {
   it('should fail to import the process model, when the user is forbidden to see the process instance result', async () => {
 
     try {
-      await testFixtureProvider.deploymentApiService.importBpmnFromFile(identityForbidden, processModelPath);
+      await testFixtureProvider
+        .deploymentApiService
+        .importBpmnFromFile(identityForbidden, processModelPath);
       should.fail(undefined, 'error', 'This request should have failed, due to a missing claim!');
     } catch (error) {
       const expectedErrorCode = 403;

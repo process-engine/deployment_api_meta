@@ -147,7 +147,8 @@ describe(`Deployment API -> POST ${importRoute}`, () => {
   }
 
   function createRequestAuthHeaders(identity) {
-    if (!identity || typeof identity.token !== 'string') {
+    const noTokenProvided = !identity || typeof identity.token !== 'string';
+    if (noTokenProvided) {
       return {};
     }
 
