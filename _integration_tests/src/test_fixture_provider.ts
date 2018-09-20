@@ -8,7 +8,11 @@ import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IDeploymentApi} from '@process-engine/deployment_api_contracts';
-import {ExecutionContext, IExecutionContextFacade, IExecutionContextFacadeFactory} from '@process-engine/process_engine_contracts';
+import {
+  ExecutionContext,
+  IExecutionContextFacade,
+  IExecutionContextFacadeFactory,
+} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
