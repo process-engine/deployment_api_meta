@@ -24,8 +24,8 @@ describe(`Deployment API -> POST ${importRoute}`, () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
 
-    authHeadersDefault = createRequestAuthHeaders(testFixtureProvider.context);
-    authHeadersForbidden = createRequestAuthHeaders(testFixtureProvider.contextForbidden);
+    authHeadersDefault = createRequestAuthHeaders(testFixtureProvider.identity);
+    authHeadersForbidden = createRequestAuthHeaders(testFixtureProvider.identityForbidden);
 
     processModelAsXml = testFixtureProvider.readProcessModelFromFile(processModelId);
 
@@ -137,7 +137,7 @@ describe(`Deployment API -> POST ${importRoute}`, () => {
 
   async function assertThatImportWasSuccessful() {
 
-    const executionContextFacade = await testFixtureProvider.createExecutionContextFacadeForContext(testFixtureProvider.context);
+    const executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(testFixtureProvider.identity);
 
     const processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
 
@@ -146,14 +146,15 @@ describe(`Deployment API -> POST ${importRoute}`, () => {
     should.exist(existingProcessModel);
   }
 
-  function createRequestAuthHeaders(context) {
-    if (context.identity === undefined || context.identity === null) {
+  function createRequestAuthHeaders(identity) {
+    const noTokenProvided = !identity || typeof identity.token !== 'string';
+    if (noTokenProvided) {
       return {};
     }
 
     const requestAuthHeaders = {
       headers: {
-        Authorization: `Bearer ${context.identity}`,
+        Authorization: `Bearer ${identity.token}`,
       },
     };
 
