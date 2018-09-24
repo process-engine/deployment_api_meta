@@ -2,9 +2,9 @@
 
 const should = require('should');
 
-const TestFixtureProvider = require('../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../dist/commonjs').TestFixtureProvider;
 
-describe('Deployment API -> Sanity Checks', () => {
+describe('Deployment API -> Sanity checks after import', () => {
 
   let testFixtureProvider;
 
@@ -14,7 +14,6 @@ describe('Deployment API -> Sanity Checks', () => {
   let processModelXml;
   let processModelUpdatedXml;
 
-  let executionContextFacade;
   let processModelService;
 
   before(async () => {
@@ -22,10 +21,8 @@ describe('Deployment API -> Sanity Checks', () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
 
-    processModelXml = testFixtureProvider.readProcessModelFromFile(processModelId);
-    processModelUpdatedXml = testFixtureProvider.readProcessModelFromFile(processModelUpdatedId);
-
-    executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(testFixtureProvider.identity);
+    processModelXml = testFixtureProvider.readProcessModelFile(processModelId);
+    processModelUpdatedXml = testFixtureProvider.readProcessModelFile(processModelUpdatedId);
     processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
 
     await performImport(processModelXml);
@@ -36,9 +33,9 @@ describe('Deployment API -> Sanity Checks', () => {
     await testFixtureProvider.tearDown();
   });
 
-  it('should always return the current version of any process definition', async () => {
+  it('should always return the most up to date version of any process definition', async () => {
 
-    const existingProcessModel = await processModelService.getProcessModelById(executionContextFacade, processModelId);
+    const existingProcessModel = await processModelService.getProcessModelById(testFixtureProvider.identities.defaultUser, processModelId);
 
     should.exist(existingProcessModel);
     should(existingProcessModel.id).be.equal(processModelId);
@@ -55,9 +52,9 @@ describe('Deployment API -> Sanity Checks', () => {
     should(startEvent.id).be.equal(expectedStartEventId, `Received an unexpected StartEventId: ${startEvent.id}`);
   });
 
-  it('should return only current versions of process definitions, when querying all process definitions', async () => {
+  it('should not contain outdated versions of any process definitions, when querying all process definitions', async () => {
 
-    const processModels = await processModelService.getProcessModels(executionContextFacade);
+    const processModels = await processModelService.getProcessModels(testFixtureProvider.identities.defaultUser);
 
     const occurencesOfTestProcessModel = processModels.filter((item) => {
       return item.id === processModelId;
@@ -74,7 +71,7 @@ describe('Deployment API -> Sanity Checks', () => {
       overwriteExisting: true,
     };
 
-    await testFixtureProvider.deploymentApiService.importBpmnFromXml(testFixtureProvider.identity, importPayload);
+    await testFixtureProvider.deploymentApiService.importBpmnFromXml(testFixtureProvider.identities.defaultUser, importPayload);
   }
 
 });

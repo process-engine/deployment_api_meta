@@ -3,13 +3,13 @@
 const should = require('should');
 const uuid = require('uuid');
 
-const TestFixtureProvider = require('../dist/commonjs/test_fixture_provider').TestFixtureProvider;
+const TestFixtureProvider = require('../dist/commonjs').TestFixtureProvider;
 
 describe('Deployment API -> importBpmnFromXml', () => {
 
   let testFixtureProvider;
-  let identityDefault;
-  let identityForbidden;
+  let defaultIdentity;
+  let restrictedIdentity;
 
   const processModelId = 'generic_deployment_sample';
   let processModelAsXml;
@@ -18,10 +18,10 @@ describe('Deployment API -> importBpmnFromXml', () => {
     testFixtureProvider = new TestFixtureProvider();
     await testFixtureProvider.initializeAndStart();
 
-    identityDefault = testFixtureProvider.identity;
-    identityForbidden = testFixtureProvider.identityForbidden;
+    defaultIdentity = testFixtureProvider.identities.defaultUser;
+    restrictedIdentity = testFixtureProvider.identities.restrictedUser;
 
-    processModelAsXml = testFixtureProvider.readProcessModelFromFile(processModelId);
+    processModelAsXml = testFixtureProvider.readProcessModelFile(processModelId);
   });
 
   after(async () => {
@@ -39,9 +39,7 @@ describe('Deployment API -> importBpmnFromXml', () => {
       overwriteExisting: false,
     };
 
-    await testFixtureProvider
-      .deploymentApiService
-      .importBpmnFromXml(identityDefault, importPayload);
+    await testFixtureProvider.deploymentApiService.importBpmnFromXml(defaultIdentity, importPayload);
 
     await assertThatImportWasSuccessful();
   });
@@ -58,13 +56,8 @@ describe('Deployment API -> importBpmnFromXml', () => {
     };
 
     // The value of overwriteExisting doesn't matter for the first import run.
-    await testFixtureProvider
-      .deploymentApiService
-      .importBpmnFromXml(identityDefault, importPayload);
-
-    await testFixtureProvider
-      .deploymentApiService
-      .importBpmnFromXml(identityDefault, importPayload);
+    await testFixtureProvider.deploymentApiService.importBpmnFromXml(defaultIdentity, importPayload);
+    await testFixtureProvider.deploymentApiService.importBpmnFromXml(defaultIdentity, importPayload);
 
     await assertThatImportWasSuccessful();
   });
@@ -83,13 +76,8 @@ describe('Deployment API -> importBpmnFromXml', () => {
       };
 
       // The value of overwriteExisting doesn't matter for the first import run.
-      await testFixtureProvider
-        .deploymentApiService
-        .importBpmnFromXml(identityDefault, importPayload);
-
-      await testFixtureProvider
-        .deploymentApiService
-        .importBpmnFromXml(identityDefault, importPayload);
+      await testFixtureProvider.deploymentApiService.importBpmnFromXml(defaultIdentity, importPayload);
+      await testFixtureProvider.deploymentApiService.importBpmnFromXml(defaultIdentity, importPayload);
 
       should.fail(undefined, 'error', 'This request should have failed, because the process model already exists!');
     } catch (error) {
@@ -110,9 +98,7 @@ describe('Deployment API -> importBpmnFromXml', () => {
     };
 
     try {
-      await testFixtureProvider
-        .deploymentApiService
-        .importBpmnFromXml(undefined, importPayload);
+      await testFixtureProvider.deploymentApiService.importBpmnFromXml(undefined, importPayload);
       should.fail({}, 'error', 'This request should have failed, due to missing user authentication!');
     } catch (error) {
       const expectedErrorCode = 401;
@@ -131,9 +117,7 @@ describe('Deployment API -> importBpmnFromXml', () => {
     };
 
     try {
-      await testFixtureProvider
-        .deploymentApiService
-        .importBpmnFromXml(identityForbidden, importPayload);
+      await testFixtureProvider.deploymentApiService.importBpmnFromXml(restrictedIdentity, importPayload);
       should.fail(undefined, 'error', 'This request should have failed, due to a missing claim!');
     } catch (error) {
       const expectedErrorCode = 403;
@@ -145,11 +129,9 @@ describe('Deployment API -> importBpmnFromXml', () => {
 
   async function assertThatImportWasSuccessful() {
 
-    const executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(identityDefault);
-
-    const processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
-
-    const existingProcessModel = await processModelService.getProcessModelById(executionContextFacade, processModelId);
+    const existingProcessModel = await testFixtureProvider
+      .processModelService
+      .getProcessModelById(testFixtureProvider.identities.defaultUser, processModelId);
 
     should.exist(existingProcessModel);
   }
