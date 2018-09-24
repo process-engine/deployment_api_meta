@@ -14,7 +14,6 @@ describe('Deployment API -> Sanity Checks', () => {
   let processModelXml;
   let processModelUpdatedXml;
 
-  let executionContextFacade;
   let processModelService;
 
   before(async () => {
@@ -25,7 +24,6 @@ describe('Deployment API -> Sanity Checks', () => {
     processModelXml = testFixtureProvider.readProcessModelFromFile(processModelId);
     processModelUpdatedXml = testFixtureProvider.readProcessModelFromFile(processModelUpdatedId);
 
-    executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(testFixtureProvider.identity);
     processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
 
     await performImport(processModelXml);
@@ -38,7 +36,7 @@ describe('Deployment API -> Sanity Checks', () => {
 
   it('should always return the current version of any process definition', async () => {
 
-    const existingProcessModel = await processModelService.getProcessModelById(executionContextFacade, processModelId);
+    const existingProcessModel = await processModelService.getProcessModelById(testFixtureProvider.identity, processModelId);
 
     should.exist(existingProcessModel);
     should(existingProcessModel.id).be.equal(processModelId);
@@ -57,7 +55,7 @@ describe('Deployment API -> Sanity Checks', () => {
 
   it('should return only current versions of process definitions, when querying all process definitions', async () => {
 
-    const processModels = await processModelService.getProcessModels(executionContextFacade);
+    const processModels = await processModelService.getProcessModels(testFixtureProvider.identity);
 
     const occurencesOfTestProcessModel = processModels.filter((item) => {
       return item.id === processModelId;

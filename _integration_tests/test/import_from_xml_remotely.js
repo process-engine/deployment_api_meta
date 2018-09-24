@@ -137,11 +137,9 @@ describe(`Deployment API -> POST ${importRoute}`, () => {
 
   async function assertThatImportWasSuccessful() {
 
-    const executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(testFixtureProvider.identity);
-
     const processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
 
-    const existingProcessModel = await processModelService.getProcessModelById(executionContextFacade, processModelId);
+    const existingProcessModel = await processModelService.getProcessModelById(testFixtureProvider.identity, processModelId);
 
     should.exist(existingProcessModel);
   }

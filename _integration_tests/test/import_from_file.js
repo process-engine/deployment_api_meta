@@ -117,11 +117,9 @@ describe('Deployment API -> importBpmnFromFile', () => {
 
   async function assertThatImportWasSuccessful() {
 
-    const executionContextFacade = await testFixtureProvider.getExecutionContextFacadeForIdentity(identityDefault);
-
     const processModelService = await testFixtureProvider.resolveAsync('ProcessModelService');
 
-    const existingProcessModel = await processModelService.getProcessModelById(executionContextFacade, processModelId);
+    const existingProcessModel = await processModelService.getProcessModelById(testFixtureProvider.identity, processModelId);
 
     should.exist(existingProcessModel);
   }

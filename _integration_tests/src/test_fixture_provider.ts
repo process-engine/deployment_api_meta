@@ -8,11 +8,6 @@ import {AppBootstrapper} from '@essential-projects/bootstrapper_node';
 import {IIdentity} from '@essential-projects/iam_contracts';
 
 import {IDeploymentApi} from '@process-engine/deployment_api_contracts';
-import {
-  ExecutionContext,
-  IExecutionContextFacade,
-  IExecutionContextFacadeFactory,
-} from '@process-engine/process_engine_contracts';
 
 const logger: Logger = Logger.createLogger('test:bootstrapper');
 
@@ -114,16 +109,6 @@ export class TestFixtureProvider {
     this._identityForbidden = <IIdentity> {
       token: 'forbiddenUser',
     };
-  }
-
-  public async getExecutionContextFacadeForIdentity(identity: IIdentity): Promise<IExecutionContextFacade> {
-
-    const executionContext: ExecutionContext = new ExecutionContext(identity);
-
-    const executionContextFacadeFactory: IExecutionContextFacadeFactory =
-      await this.resolveAsync<IExecutionContextFacadeFactory>('ExecutionContextFacadeFactory');
-
-    return executionContextFacadeFactory.create(executionContext);
   }
 
   public readProcessModelFromFile(fileName: string): string {
